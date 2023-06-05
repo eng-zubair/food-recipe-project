@@ -9,7 +9,7 @@ export const state = {
     query: '',
     results: [],
     page: 1,
-    resultPerPage: RES_PER_PAGE,
+    resultsPerPage: RES_PER_PAGE,
   },
   bookmarks: [],
 };
@@ -19,10 +19,10 @@ const createRecipeObject = function (data) {
   return {
     id: recipe.id,
     title: recipe.title,
-    servings: recipe.servings,
     publisher: recipe.publisher,
-    image: recipe.image_url,
     sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
     cookingTime: recipe.cooking_time,
     ingredients: recipe.ingredients,
     ...(recipe.key && { key: recipe.key }),
@@ -30,7 +30,6 @@ const createRecipeObject = function (data) {
 };
 
 export const loadRecipe = async function (id) {
-  // Fetching the recipe
   try {
     const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
     state.recipe = createRecipeObject(data);
@@ -41,7 +40,7 @@ export const loadRecipe = async function (id) {
 
     console.log(state.recipe);
   } catch (err) {
-    // Temp err handling
+    // Temp error handling
     console.error(`${err} 💥💥💥💥`);
     throw err;
   }
@@ -73,8 +72,8 @@ export const loadSearchResults = async function (query) {
 export const getSearchResultsPage = function (page = state.search.page) {
   state.search.page = page;
 
-  const start = (page - 1) * state.search.resultPerPage; // 0
-  const end = page * state.search.resultPerPage; // 9
+  const start = (page - 1) * state.search.resultsPerPage; // 0
+  const end = page * state.search.resultsPerPage; // 9
 
   return state.search.results.slice(start, end);
 };
@@ -82,7 +81,7 @@ export const getSearchResultsPage = function (page = state.search.page) {
 export const updateServings = function (newServings) {
   state.recipe.ingredients.forEach(ing => {
     ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
-    // newQt = oldQt * newServings / oldServings // 2*8/4=4
+    // newQt = oldQt * newServings / oldServings // 2 * 8 / 4 = 4
   });
 
   state.recipe.servings = newServings;
@@ -96,7 +95,7 @@ export const addBookmark = function (recipe) {
   // Add bookmark
   state.bookmarks.push(recipe);
 
-  // Mark current recipe as bookmark
+  // Mark current recipe as bookmarked
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
 
   persistBookmarks();
@@ -119,7 +118,6 @@ const init = function () {
 };
 init();
 
-// Only in development phase
 const clearBookmarks = function () {
   localStorage.clear('bookmarks');
 };

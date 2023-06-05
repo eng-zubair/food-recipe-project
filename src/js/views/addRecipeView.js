@@ -39,7 +39,7 @@ class AddRecipeView extends View {
     });
   }
 
-  _genrateMarkup() {}
+  _generateMarkup() {}
 }
 
 export default new AddRecipeView();
