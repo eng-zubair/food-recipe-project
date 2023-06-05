@@ -2,6 +2,7 @@ import icons from '../../img/icons.svg';
 
 export default class View {
   _data;
+  _parentElement;
 
   /**
    * Render the received object to the DOM
@@ -100,4 +101,3 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 }
-
